@@ -1,6 +1,5 @@
 package com.luopc1218.wordrememberserver.controller;
 
-import com.luopc1218.wordrememberserver.entity.ApiResponseStatus;
 import com.luopc1218.wordrememberserver.entity.ApiResponse;
 import com.luopc1218.wordrememberserver.entity.User;
 import com.luopc1218.wordrememberserver.service.UserService;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/user")
