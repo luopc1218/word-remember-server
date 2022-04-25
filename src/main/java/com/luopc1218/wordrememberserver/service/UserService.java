@@ -17,9 +17,9 @@ public class UserService {
     private UserMapper userMapper;
 
     public void addUser(User user, String password) {
-        userMapper.addUser(user);
-        //  直接通过get读出来即可
-        userMapper.addUserPassword(user.getId(), password);
+        Integer userId = userMapper.addUser(user.getName(), user.getEmail(), user.getPhone());
+        System.out.println(userId);
+//        userMapper.addUserPassword(userId, user.getPassword());
     }
 
     public User getUserById(Integer id) {
