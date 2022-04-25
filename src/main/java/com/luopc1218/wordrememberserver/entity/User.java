@@ -7,18 +7,18 @@ public class User {
     private Integer id;
     private String name;
     private String email;
-    private String password;
+    private String phone;
 
-    public User(Integer id, String name, String email, String password) {
+    public User(String name, String email, String phone) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
+
+    public User(Integer id, String name, String email, String phone) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
-    }
-
-    public User(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
+        this.phone = phone;
     }
 }

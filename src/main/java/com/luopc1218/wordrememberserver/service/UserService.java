@@ -15,9 +15,10 @@ public class UserService {
     private UserMapper userMapper;
 
 
-    public Boolean addUser(User user) {
-        userMapper.addUser(user.getName(), user.getEmail(), DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
-        return true;
+    public void addUser(User user, String password) {
+        Integer userId = userMapper.addUser(user.getName(), user.getEmail(), user.getPhone());
+        System.out.println(userId);
+//        userMapper.addUserPassword(userId, user.getPassword());
     }
 
     public User getUserById(Integer id) {

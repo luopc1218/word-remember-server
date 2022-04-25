@@ -1,6 +1,7 @@
 package com.luopc1218.wordrememberserver.controller;
 
 import com.luopc1218.wordrememberserver.entity.ApiResponse;
+import com.luopc1218.wordrememberserver.entity.ApiResponseStatus;
 import com.luopc1218.wordrememberserver.entity.User;
 import com.luopc1218.wordrememberserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +19,27 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/getUserById", method = RequestMethod.POST)
-    public ApiResponse signUp(@RequestParam(value = "id", required = true) Integer id) {
-        if (userService.getUserById(id) == null) {
-            return ApiResponse.fail("用户不存在");
+    @RequestMapping(value = "/signIn", method = RequestMethod.POST)
+    public ApiResponse signIn(@RequestParam(value = "name", required = true) String name, @RequestParam(value = "password", required = true) String password) {
+        try {
+            if (userService.getUserByName(name) != null) {
+                return ApiResponse.success();
+            } else {
+                return ApiResponse.fail("用户不存在");
+            }
+        } catch (Exception e) {
+            return ApiResponse.fail(e.getMessage());
         }
-        return ApiResponse.success(userService.getUserById(id));
     }
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public ApiResponse signUp(@RequestParam(value = "name", required = true) String name, @RequestParam(value = "password", required = true) String password, @RequestParam(value = "email", required = false) String email) {
+    public ApiResponse signUp(@RequestParam(value = "name", required = true) String name, @RequestParam(value = "password", required = true) String password, @RequestParam(value = "email", required = false) String email, @RequestParam(value = "phone", required = false) String phone) {
         try {
             if (userService.getUserByName(name) != null) {
                 return ApiResponse.fail("用户已存在");
             }
-            userService.addUser(new User(name, email, DigestUtils.md5DigestAsHex(password.getBytes())));
+            String encryptedPassword = DigestUtils.md5DigestAsHex(password.getBytes());
+            userService.addUser(new User(name, email, phone), encryptedPassword);
             return ApiResponse.success();
         } catch (Exception e) {
             return ApiResponse.fail(e.getMessage());

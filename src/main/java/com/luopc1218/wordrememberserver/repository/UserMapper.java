@@ -1,21 +1,22 @@
 package com.luopc1218.wordrememberserver.repository;
 
 import com.luopc1218.wordrememberserver.entity.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    @Select("select id,name,email from users where id=#{id};")
+    @Select("select id,name,email from user where id=#{id};")
     List<User> getUserById(Integer id);
 
-    @Select("select id,name,email from users where name=#{name};")
+    @Select("select * from user where name=#{name};")
     List<User> getUserByName(String name);
 
-    @Insert("insert into users(name,email,password) value(#{name},#{email},#{password})")
-    Boolean addUser(String name, String email, String password);
+    @Insert("insert into user(name,email,phone) value(#{name},#{email},#{phone});")
+    @Options(keyColumn = "id", useGeneratedKeys = true, keyProperty = "param1")
+    Integer addUser(@Param("name") String name, @Param("email") String email, @Param("phone") String phone);
+
+    @Insert("insert into user_password(id,password) value(#{id},#{password});")
+    void addUserPassword(Integer id, String password);
 }
