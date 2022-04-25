@@ -17,9 +17,8 @@ public class UserService {
     private UserMapper userMapper;
 
     public void addUser(User user, String password) {
-        Integer userId = userMapper.addUser(user.getName(), user.getEmail(), user.getPhone());
-        System.out.println(userId);
-//        userMapper.addUserPassword(userId, user.getPassword());
+        userMapper.addUser(user);
+        userMapper.addUserPassword(user.getId(), password);
     }
 
     public User getUserById(Integer id) {
