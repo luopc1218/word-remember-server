@@ -3,20 +3,20 @@ package com.luopc1218.wordrememberserver.entity;
 import lombok.Data;
 
 @Data
-public class ApiResponse<T> {
+public class ApiResponse {
     private Integer code;
     private String message;
     private Boolean success;
-    private T data;
+    private Object data;
 
-    private ApiResponse(Integer code, String message, boolean success, T data) {
+    private ApiResponse(Integer code, String message, boolean success, Object data) {
         this.code = code;
         this.message = message;
         this.success = success;
         this.data = data;
     }
 
-    private ApiResponse(ApiResponseStatus apiResponseStatus, T data) {
+    private ApiResponse(ApiResponseStatus apiResponseStatus, Object data) {
         this.code = apiResponseStatus.getCode();
         this.message = apiResponseStatus.getMessage();
         this.success = apiResponseStatus.getSuccess();
@@ -27,8 +27,8 @@ public class ApiResponse<T> {
         return new ApiResponse(ApiResponseStatus.SUCCESS, null);
     }
 
-    public static <E> ApiResponse success(E data) {
-        return new ApiResponse<>(ApiResponseStatus.SUCCESS, data);
+    public static ApiResponse success(Object data) {
+        return new ApiResponse(ApiResponseStatus.SUCCESS, data);
     }
 
     public static ApiResponse fail() {

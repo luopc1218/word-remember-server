@@ -5,8 +5,8 @@ public enum ApiResponseStatus {
     FAIL(-1, "", false),
     DEVELOPING(-1, "接口开发中", false);
 
-    private Integer code;
-    private String message;
+    private final Integer code;
+    private final String message;
     private final Boolean success;
 
     ApiResponseStatus(Integer code, String message, Boolean success) {

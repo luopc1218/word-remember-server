@@ -1,15 +1,16 @@
 package com.luopc1218.wordrememberserver.controller;
 
 import com.luopc1218.wordrememberserver.entity.ApiResponse;
-import com.luopc1218.wordrememberserver.entity.ApiResponseStatus;
+import com.luopc1218.wordrememberserver.entity.Password;
 import com.luopc1218.wordrememberserver.entity.User;
 import com.luopc1218.wordrememberserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 
 @RestController
@@ -20,10 +21,16 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
-    public ApiResponse signIn(@RequestParam(value = "name", required = true) String name, @RequestParam(value = "password", required = true) String password) {
+    public ApiResponse signIn(@RequestParam(value = "name") String name, @RequestParam(value = "password") String password) {
         try {
-            if (userService.getUserByName(name) != null) {
-                return ApiResponse.success();
+            User user = userService.getUserByName(name);
+            if (user != null) {
+                String encryptedPassword = new Password(password).getEncryptedPassword();
+                String basePassword = userService.getPasswordById(user.getId());
+                if (!Objects.equals(basePassword, encryptedPassword)) {
+                    return ApiResponse.fail("密码错误");
+                }
+                return ApiResponse.success(user);
             } else {
                 return ApiResponse.fail("用户不存在");
             }
@@ -33,12 +40,12 @@ public class UserController {
     }
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public ApiResponse signUp(@RequestParam(value = "name", required = true) String name, @RequestParam(value = "password", required = true) String password, @RequestParam(value = "email", required = false) String email, @RequestParam(value = "phone", required = false) String phone) {
+    public ApiResponse signUp(@RequestParam(value = "name") String name, @RequestParam(value = "password") String password, @RequestParam(value = "email", required = false) String email, @RequestParam(value = "phone", required = false) String phone) {
         try {
             if (userService.getUserByName(name) != null) {
                 return ApiResponse.fail("用户已存在");
             }
-            String encryptedPassword = DigestUtils.md5DigestAsHex(password.getBytes());
+            String encryptedPassword = new Password(password).getEncryptedPassword();
             userService.addUser(new User(name, email, phone), encryptedPassword);
             return ApiResponse.success();
         } catch (Exception e) {
