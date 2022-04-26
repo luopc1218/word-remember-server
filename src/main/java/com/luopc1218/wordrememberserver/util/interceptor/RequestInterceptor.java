@@ -24,10 +24,15 @@ public class RequestInterceptor implements HandlerInterceptor {
         ApiResponse fail = ApiResponse.fail("need sign in!");
         fail.setCode(200);
         try {
+            //  获取输出流
             ServletOutputStream outputStream = response.getOutputStream();
+            //  序列化工具
             ObjectMapper objectMapper = new ObjectMapper();
+            //  将 ApiResponse 序列化为 字节
             byte[] bytes = objectMapper.writeValueAsBytes(fail);
+            //  写入输出流
             outputStream.write(bytes);
+            //  刷新
             response.flushBuffer();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
