@@ -4,6 +4,7 @@ import com.luopc1218.wordrememberserver.entity.ApiResponse;
 import com.luopc1218.wordrememberserver.entity.Password;
 import com.luopc1218.wordrememberserver.entity.User;
 import com.luopc1218.wordrememberserver.service.UserService;
+import com.luopc1218.wordrememberserver.util.jwt.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,11 +27,13 @@ public class UserController {
             User user = userService.getUserByName(name);
             if (user != null) {
                 String encryptedPassword = new Password(password).getEncryptedPassword();
-                String basePassword = userService.getPasswordById(user.getId());
+                Integer userId = user.getId();
+                String basePassword = userService.getPasswordById(userId);
                 if (!Objects.equals(basePassword, encryptedPassword)) {
                     return ApiResponse.fail("密码错误");
                 }
-                return ApiResponse.success(user);
+                String jwtToken = Jwt.createJwtToken(user);
+                return ApiResponse.success(jwtToken);
             } else {
                 return ApiResponse.fail("用户不存在");
             }

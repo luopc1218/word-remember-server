@@ -3,7 +3,9 @@ package com.luopc1218.wordrememberserver.entity;
 public enum ApiResponseStatus {
     SUCCESS(200, "", true),
     FAIL(-1, "", false),
-    DEVELOPING(-1, "接口开发中", false);
+    DEVELOPING(-1, "接口开发中", false),
+    NEED_SIGN_IN(401, "请先登录", false),
+    SIGN_IN_EXPIRED(401, "登录信息失效，请重新登录", false);
 
     private final Integer code;
     private final String message;

@@ -1,22 +1,33 @@
 package com.luopc1218.wordrememberserver.util.jwt;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.luopc1218.wordrememberserver.entity.User;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Jwt {
 
     //    过期时间：12小时
     public static final long EXPIRE_TIME = 1000 * 60 * 60 * 12;
-    public static Algorithm algorithm = Algorithm.HMAC256("word-remember-server");
+    public static final String IssuerName = "word-remember-server";
+    public static final Algorithm algorithm = Algorithm.HMAC256(IssuerName);
 
-
-    public static String createJwtToken(String id) {
-        return JWT.create().withExpiresAt(new Date()).withAudience(id).sign(Jwt.algorithm);
+    public static String createJwtToken(User user) {
+        return JWT.create().withExpiresAt(new Date()).withClaim("userId", user.getId()).withClaim("userName", user.getName()).withIssuer(IssuerName).sign(Jwt.algorithm);
     }
 
     public static Boolean checkJwtToken(String jwtToken) {
-        return false;
+        try {
+            JWTVerifier jwtVerifier = JWT.require(Jwt.algorithm).build();
+            DecodedJWT decodedJWT = jwtVerifier.verify(jwtToken.split(" ")[1]);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
