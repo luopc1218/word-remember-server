@@ -22,7 +22,7 @@ public class RequestInterceptor implements HandlerInterceptor {
         }
         System.out.println("need sign in!");
         ApiResponse fail = ApiResponse.fail("need sign in!");
-        fail.setCode(401);
+        fail.setCode(200);
         try {
             ServletOutputStream outputStream = response.getOutputStream();
             ObjectMapper objectMapper = new ObjectMapper();
@@ -30,6 +30,7 @@ public class RequestInterceptor implements HandlerInterceptor {
             outputStream.write(bytes);
             response.flushBuffer();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
         }
