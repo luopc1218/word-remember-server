@@ -43,7 +43,7 @@ public class RequestInterceptor implements HandlerInterceptor {
             byte[] bytes = objectMapper.writeValueAsBytes(fail);
             //  写入输出流
             outputStream.write(bytes);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
             //  刷新
             response.flushBuffer();

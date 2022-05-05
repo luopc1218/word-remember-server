@@ -9,6 +9,7 @@ public class ApiResponse {
     private Boolean success;
     private Object data;
 
+
     private ApiResponse(Integer code, String message, boolean success, Object data) {
         this.code = code;
         this.message = message;
@@ -31,8 +32,12 @@ public class ApiResponse {
         return new ApiResponse(ApiResponseStatus.SUCCESS, data);
     }
 
-    public static ApiResponse fail() {
-        return new ApiResponse(ApiResponseStatus.FAIL, null);
+    public static ApiResponse success(String message) {
+        return new ApiResponse(200, message, true, null);
+    }
+
+    public static ApiResponse success(Object data, String message) {
+        return new ApiResponse(200, message, true, data);
     }
 
     public static ApiResponse fail(String message) {

@@ -29,4 +29,9 @@ public class Jwt {
             return false;
         }
     }
+
+    public static DecodedJWT getJwtToken(String jwtToken) {
+        JWTVerifier jwtVerifier = JWT.require(Jwt.algorithm).build();
+        return jwtVerifier.verify(jwtToken.split(" ")[1]);
+    }
 }
