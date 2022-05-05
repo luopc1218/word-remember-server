@@ -17,7 +17,7 @@ public class Jwt {
     public static final Algorithm algorithm = Algorithm.HMAC256(IssuerName);
 
     public static String createJwtToken(User user) {
-        return JWT.create().withExpiresAt(new Date()).withClaim("userId", user.getId()).withClaim("userName", user.getName()).withIssuer(IssuerName).sign(Jwt.algorithm);
+        return JWT.create().withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME)).withClaim("userId", user.getId()).withClaim("userName", user.getName()).withIssuer(IssuerName).sign(Jwt.algorithm);
     }
 
     public static Boolean checkJwtToken(String jwtToken) {
@@ -26,7 +26,6 @@ public class Jwt {
             DecodedJWT decodedJWT = jwtVerifier.verify(jwtToken.split(" ")[1]);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
