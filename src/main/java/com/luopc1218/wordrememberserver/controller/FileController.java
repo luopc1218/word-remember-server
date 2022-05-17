@@ -3,6 +3,7 @@ package com.luopc1218.wordrememberserver.controller;
 import com.luopc1218.wordrememberserver.entity.ApiResponse;
 import com.luopc1218.wordrememberserver.entity.ApiResponseStatus;
 import com.luopc1218.wordrememberserver.util.annotation.JsonWebTokenRequire;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,13 +19,18 @@ import java.util.Date;
 public class FileController {
     @JsonWebTokenRequire
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public ApiResponse upload(@RequestParam("file") MultipartFile file) {
+    public ApiResponse upload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         try {
-            String folder = "D:\\uploadfiles";
+            if (file.isEmpty() || file.getSize() == 0) {
+                return ApiResponse.fail("文件为空");
+            }
+            String folderBase = "www.myfile.com";
+            String folder = "E:\\uploadfiles";
             String filePath = folder + "/" + file.getOriginalFilename();
             File localFile = new File(filePath);
             file.transferTo(localFile);
-            return ApiResponse.success(filePath);
+            String resultPath = folderBase  + "/" + file.getOriginalFilename();//存储路径;
+            return ApiResponse.success(resultPath,"上传成功");
         } catch (IOException e) {
             return ApiResponse.fail(e.getMessage());
         }
