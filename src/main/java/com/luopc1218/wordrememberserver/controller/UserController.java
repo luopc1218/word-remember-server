@@ -26,6 +26,16 @@ public class UserController {
     @RequestMapping(value = "/checkSignIn", method = RequestMethod.GET)
     public ApiResponse checkSignIn(@RequestHeader("Authorization") String accessToken) {
         try {
+            return ApiResponse.success(true);
+        } catch (Exception e) {
+            return ApiResponse.fail(e.getMessage());
+        }
+    }
+
+    @JsonWebTokenRequire
+    @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
+    public ApiResponse getUserInfo(@RequestHeader("Authorization") String accessToken) {
+        try {
             DecodedJWT decodedJWT = Jwt.getJwtToken(accessToken);
             Integer userId = decodedJWT.getClaim("userId").asInt();
             User user = userService.getUserById(userId);
@@ -38,6 +48,7 @@ public class UserController {
             return ApiResponse.fail(e.getMessage());
         }
     }
+
 
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
     public ApiResponse signIn(@RequestBody SignInForm signInForm) {
@@ -62,7 +73,6 @@ public class UserController {
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public ApiResponse signUp(@RequestBody SignUpForm signUpForm) {
-        System.out.println(signUpForm);
         try {
             if (userService.getUserByName(signUpForm.getName()) != null) {
                 return ApiResponse.fail("用户已存在");

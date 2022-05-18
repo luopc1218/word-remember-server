@@ -43,8 +43,4 @@ public class UserService {
             return result.get(0);
         }
     }
-
-    public void example() {
-
-    }
 }
