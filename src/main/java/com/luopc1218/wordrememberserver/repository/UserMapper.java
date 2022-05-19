@@ -14,7 +14,7 @@ public interface UserMapper {
     @Select("select * from user where name=#{name};")
     List<User> getUserByName(String name);
 
-    @Insert("insert into user(name,email,phone) value(#{user.name},#{user.email},#{user.phone});")
+    @Insert("insert into user(name,email,phone,avatarUrl) value(#{user.name},#{user.email},#{user.phone},#{user.avatarUrl});")
     @Options(keyColumn = "id", useGeneratedKeys = true, keyProperty = "id")
         //  执行insert的语句,返回的integer是数据库实际新增的数据数量,不是新增的id
         //  然后用标准类型就可以了
@@ -25,4 +25,7 @@ public interface UserMapper {
 
     @Select("select password from user_password where id=#{id};")
     List<UserPasswordMap> getUserPasswordById(Integer id);
+
+    @Update("update user set avatarUrl=#{url} where id=#{id};")
+    void changeAvatar(Integer id, String url);
 }

@@ -10,6 +10,7 @@ public class User {
     private String name;
     private String phone;
     private String email;
+    private String avatarUrl;
     private Date createTime;
 
 
@@ -19,12 +20,20 @@ public class User {
         this.email = email;
     }
 
-    public User(Integer id, String name, String phone, String email, Date createTime) {
+    public User(Integer id, String name, String phone, String email, String avatarUrl, Date createTime) {
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.email = email;
+        this.avatarUrl = avatarUrl;
         this.createTime = createTime;
+    }
+
+    public User(String name, String phone, String email, String avatarUrl) {
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+        this.avatarUrl = avatarUrl;
     }
 }
 

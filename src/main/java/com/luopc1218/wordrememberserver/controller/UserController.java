@@ -1,17 +1,17 @@
 package com.luopc1218.wordrememberserver.controller;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.luopc1218.wordrememberserver.entity.ApiResponse;
 import com.luopc1218.wordrememberserver.entity.Password;
 import com.luopc1218.wordrememberserver.entity.User;
-import com.luopc1218.wordrememberserver.entity.forms.SignInForm;
 import com.luopc1218.wordrememberserver.entity.forms.SignUpForm;
 import com.luopc1218.wordrememberserver.service.UserService;
 import com.luopc1218.wordrememberserver.util.annotation.JsonWebTokenRequire;
 import com.luopc1218.wordrememberserver.util.jwt.Jwt;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -34,10 +34,9 @@ public class UserController {
 
     @JsonWebTokenRequire
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.GET)
-    public ApiResponse getUserInfo(@RequestHeader("Authorization") String accessToken) {
+    public ApiResponse getUserInfo(HttpServletRequest request, @RequestHeader("Authorization") String accessToken) {
         try {
-            DecodedJWT decodedJWT = Jwt.getJwtToken(accessToken);
-            Integer userId = decodedJWT.getClaim("userId").asInt();
+            Integer userId = (Integer) request.getAttribute("CURRENT_USER_ID");
             User user = userService.getUserById(userId);
             if (user != null) {
                 return ApiResponse.success(user);
@@ -51,11 +50,11 @@ public class UserController {
 
 
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
-    public ApiResponse signIn(@RequestBody SignInForm signInForm) {
+    public ApiResponse signIn(@RequestBody Map<String, String> signInForm) {
         try {
-            User user = userService.getUserByName(signInForm.getName());
+            User user = userService.getUserByName(signInForm.get("name"));
             if (user != null) {
-                String encryptedPassword = new Password(signInForm.getPassword()).getEncryptedPassword();
+                String encryptedPassword = new Password(signInForm.get("password")).getEncryptedPassword();
                 Integer userId = user.getId();
                 String basePassword = userService.getPasswordById(userId);
                 if (!Objects.equals(basePassword, encryptedPassword)) {
@@ -72,14 +71,32 @@ public class UserController {
     }
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public ApiResponse signUp(@RequestBody SignUpForm signUpForm) {
+    public ApiResponse signUp(@RequestBody Map<String, String> signUpForm) {
+        String name = signUpForm.get("name");
+        String password = signUpForm.get("password");
+        String phone = signUpForm.get("phone");
+        String email = signUpForm.get("email");
+        String avatarUrl = signUpForm.get("avatarUrl");
         try {
-            if (userService.getUserByName(signUpForm.getName()) != null) {
+            if (userService.getUserByName(name) != null) {
                 return ApiResponse.fail("用户已存在");
             }
-            String encryptedPassword = new Password(signUpForm.getPassword()).getEncryptedPassword();
-            userService.addUser(new User(signUpForm.getName(), signUpForm.getPhone(), signUpForm.getEmail()), encryptedPassword);
+            String encryptedPassword = new Password(password).getEncryptedPassword();
+            userService.addUser(new User(signUpForm.get("name"), phone, email,avatarUrl), encryptedPassword);
             return ApiResponse.success("注册成功");
+        } catch (Exception e) {
+            return ApiResponse.fail(e.getMessage());
+        }
+    }
+
+    @JsonWebTokenRequire
+    @RequestMapping(value = "/changeAvatar", method = RequestMethod.POST)
+    public ApiResponse changeAvatar(HttpServletRequest request, @RequestBody Map<String, Object> params) {
+        try {
+            Integer userId = (Integer) request.getAttribute("CURRENT_USER_ID");
+            String url = (String) params.get("url");
+            userService.changeAvatar(userId, url);
+            return ApiResponse.success("修改成功");
         } catch (Exception e) {
             return ApiResponse.fail(e.getMessage());
         }

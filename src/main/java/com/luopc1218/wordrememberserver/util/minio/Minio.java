@@ -22,10 +22,9 @@ public class Minio {
     public String upload(MultipartFile file) {
         try {
             String originalFileName = file.getOriginalFilename();
-            String fileName = UUID.randomUUID().toString().replace("-", "") + originalFileName;
-            PutObjectArgs objectArgs = PutObjectArgs.builder().bucket(bucketName).object(fileName).contentType(file.getContentType()).stream(file.getInputStream(), file.getSize(), -1).build();
+            PutObjectArgs objectArgs = PutObjectArgs.builder().bucket(bucketName).object(originalFileName).contentType(file.getContentType()).stream(file.getInputStream(), file.getSize(), -1).build();
             minioClient.putObject(objectArgs);
-            return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName).object(fileName).build());
+            return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName).object(originalFileName).build());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

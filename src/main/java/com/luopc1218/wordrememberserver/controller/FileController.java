@@ -1,7 +1,6 @@
 package com.luopc1218.wordrememberserver.controller;
 
 import com.luopc1218.wordrememberserver.entity.ApiResponse;
-import com.luopc1218.wordrememberserver.entity.ApiResponseStatus;
 import com.luopc1218.wordrememberserver.util.annotation.JsonWebTokenRequire;
 import com.luopc1218.wordrememberserver.util.minio.Minio;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,13 +18,15 @@ public class FileController {
     @Autowired
     Minio minio;
 
-    @JsonWebTokenRequire
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public ApiResponse upload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         try {
             if (file.isEmpty() || file.getSize() == 0) {
                 return ApiResponse.fail("文件为空");
             }
+//            else if (file.getSize() >= 2048) {
+//                return ApiResponse.fail("文件过大,请上传不大于2m的文件");
+//            }
             String fileUrl = minio.upload(file);
             return ApiResponse.success(fileUrl, "上传成功");
         } catch (Exception e) {

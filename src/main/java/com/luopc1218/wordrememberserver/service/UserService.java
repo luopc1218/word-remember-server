@@ -43,4 +43,8 @@ public class UserService {
             return result.get(0);
         }
     }
+
+    public void changeAvatar(Integer id, String url) {
+        userMapper.changeAvatar(id, url);
+    }
 }
