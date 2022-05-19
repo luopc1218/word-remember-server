@@ -1,7 +1,6 @@
 package com.luopc1218.wordrememberserver.controller;
 
-import com.luopc1218.wordrememberserver.entity.ApiResponse;
-import com.luopc1218.wordrememberserver.util.annotation.JsonWebTokenRequire;
+import com.luopc1218.wordrememberserver.entity.ApiResponse.ApiResponse;
 import com.luopc1218.wordrememberserver.util.minio.Minio;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

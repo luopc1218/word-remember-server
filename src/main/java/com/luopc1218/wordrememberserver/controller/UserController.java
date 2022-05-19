@@ -1,6 +1,6 @@
 package com.luopc1218.wordrememberserver.controller;
 
-import com.luopc1218.wordrememberserver.entity.ApiResponse;
+import com.luopc1218.wordrememberserver.entity.ApiResponse.ApiResponse;
 import com.luopc1218.wordrememberserver.entity.Password;
 import com.luopc1218.wordrememberserver.entity.User;
 import com.luopc1218.wordrememberserver.service.UserService;

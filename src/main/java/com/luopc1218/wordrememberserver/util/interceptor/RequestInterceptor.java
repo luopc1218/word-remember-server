@@ -2,8 +2,8 @@ package com.luopc1218.wordrememberserver.util.interceptor;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.luopc1218.wordrememberserver.entity.ApiResponse;
-import com.luopc1218.wordrememberserver.entity.ApiResponseStatus;
+import com.luopc1218.wordrememberserver.entity.ApiResponse.ApiResponse;
+import com.luopc1218.wordrememberserver.entity.ApiResponse.ApiResponseStatus;
 import com.luopc1218.wordrememberserver.util.annotation.JsonWebTokenRequire;
 import com.luopc1218.wordrememberserver.util.jwt.Jwt;
 import jakarta.servlet.ServletOutputStream;
@@ -13,8 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
-
-import java.io.IOException;
 
 public class RequestInterceptor implements HandlerInterceptor {
     @Override
