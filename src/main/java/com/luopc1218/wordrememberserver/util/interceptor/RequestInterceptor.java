@@ -19,43 +19,43 @@ public class RequestInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
         if (handler instanceof ResourceHttpRequestHandler) {
-            return false;
-        }
 
-        // 反射获取方法上的LoginRequred注解
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
-        JsonWebTokenRequire jsonWebTokenRequire = handlerMethod.getMethod().getAnnotation(JsonWebTokenRequire.class);
-//        不需要token校验
-        if (jsonWebTokenRequire == null) {
-            return true;
-        }
-        String jwtToken = request.getHeader("Authorization");
-        ApiResponse fail;
-        if (jwtToken == null) {
-//            没有token
-            fail = ApiResponse.fail(ApiResponseStatus.NEED_SIGN_IN);
-        } else if (Jwt.checkJwtToken(jwtToken)) {
-            return true;
         } else {
+            // 反射获取方法上的LoginRequred注解
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            JsonWebTokenRequire jsonWebTokenRequire = handlerMethod.getMethod().getAnnotation(JsonWebTokenRequire.class);
+//        需要token校验
+            if (jsonWebTokenRequire != null) {
+                String jwtToken = request.getHeader("Authorization");
+                ApiResponse fail;
+                if (jwtToken == null) {
+//            没有token
+                    fail = ApiResponse.fail(ApiResponseStatus.NEED_SIGN_IN);
+                } else if (Jwt.checkJwtToken(jwtToken)) {
+                    return true;
+                } else {
 //            token失效
-            fail = ApiResponse.fail(ApiResponseStatus.SIGN_IN_EXPIRED);
-        }
-        try {
-            //  获取输出流
-            ServletOutputStream outputStream = response.getOutputStream();
-            //  序列化工具
-            ObjectMapper objectMapper = new ObjectMapper();
-            //  将 ApiResponse 序列化为 字节
-            byte[] bytes = objectMapper.writeValueAsBytes(fail);
-            //  写入输出流
-            outputStream.write(bytes);
+                    fail = ApiResponse.fail(ApiResponseStatus.SIGN_IN_EXPIRED);
+                }
+                try {
+                    //  获取输出流
+                    ServletOutputStream outputStream = response.getOutputStream();
+                    //  序列化工具
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    //  将 ApiResponse 序列化为 字节
+                    byte[] bytes = objectMapper.writeValueAsBytes(fail);
+                    //  写入输出流
+                    outputStream.write(bytes);
 //            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json;charset=UTF-8");
-            //  刷新
-            response.flushBuffer();
-        } catch (Exception e) {
-            e.printStackTrace();
+                    response.setContentType("application/json;charset=UTF-8");
+                    //  刷新
+                    response.flushBuffer();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
-        return false;
+        return true;
     }
 }
