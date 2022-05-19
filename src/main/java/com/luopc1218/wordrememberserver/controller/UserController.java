@@ -3,7 +3,6 @@ package com.luopc1218.wordrememberserver.controller;
 import com.luopc1218.wordrememberserver.entity.ApiResponse;
 import com.luopc1218.wordrememberserver.entity.Password;
 import com.luopc1218.wordrememberserver.entity.User;
-import com.luopc1218.wordrememberserver.entity.forms.SignUpForm;
 import com.luopc1218.wordrememberserver.service.UserService;
 import com.luopc1218.wordrememberserver.util.annotation.JsonWebTokenRequire;
 import com.luopc1218.wordrememberserver.util.jwt.Jwt;
@@ -82,7 +81,7 @@ public class UserController {
                 return ApiResponse.fail("用户已存在");
             }
             String encryptedPassword = new Password(password).getEncryptedPassword();
-            userService.addUser(new User(signUpForm.get("name"), phone, email,avatarUrl), encryptedPassword);
+            userService.addUser(new User(signUpForm.get("name"), phone, email, avatarUrl), encryptedPassword);
             return ApiResponse.success("注册成功");
         } catch (Exception e) {
             return ApiResponse.fail(e.getMessage());
@@ -96,6 +95,24 @@ public class UserController {
             Integer userId = (Integer) request.getAttribute("CURRENT_USER_ID");
             String url = (String) params.get("url");
             userService.changeAvatar(userId, url);
+            return ApiResponse.success("修改成功");
+        } catch (Exception e) {
+            return ApiResponse.fail(e.getMessage());
+        }
+    }
+
+    @JsonWebTokenRequire
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+    public ApiResponse changePassword(HttpServletRequest request, @RequestBody Map<String, Object> changePasswordForm) {
+        try {
+            Integer userId = (Integer) request.getAttribute("CURRENT_USER_ID");
+            String encryptedPassword = new Password((String) changePasswordForm.get("password")).getEncryptedPassword();
+            String basePassword = userService.getPasswordById(userId);
+            if (!Objects.equals(basePassword, encryptedPassword)) {
+                return ApiResponse.fail("密码错误");
+            }
+            String encryptedNewPassword = new Password((String) changePasswordForm.get("newPassword")).getEncryptedPassword();
+            userService.changePassword(userId, encryptedNewPassword);
             return ApiResponse.success("修改成功");
         } catch (Exception e) {
             return ApiResponse.fail(e.getMessage());

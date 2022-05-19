@@ -3,10 +3,8 @@ package com.luopc1218.wordrememberserver.service;
 import com.luopc1218.wordrememberserver.entity.User;
 import com.luopc1218.wordrememberserver.entity.UserPasswordMap;
 import com.luopc1218.wordrememberserver.repository.UserMapper;
-import org.apache.ibatis.annotations.Options;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import java.util.List;
 
@@ -46,5 +44,9 @@ public class UserService {
 
     public void changeAvatar(Integer id, String url) {
         userMapper.changeAvatar(id, url);
+    }
+
+    public void changePassword(Integer id, String newPassword) {
+        userMapper.changePassword(id, newPassword);
     }
 }
