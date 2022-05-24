@@ -1,11 +1,14 @@
 package com.luopc1218.wordrememberserver.controller;
 
+import java.util.Map;
 import com.luopc1218.wordrememberserver.entity.request.ApiResponse;
+import com.luopc1218.wordrememberserver.entity.request.ApiResponseStatus;
 import com.luopc1218.wordrememberserver.entity.request.Pagination;
 import com.luopc1218.wordrememberserver.service.LexiconService;
 import com.luopc1218.wordrememberserver.util.annotation.JsonWebTokenRequire;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,4 +34,19 @@ public class LexiconsController {
             return ApiResponse.fail(e.getMessage());
         }
     }
+
+    @JsonWebTokenRequire
+    @RequestMapping(value = "/createUserLexicon", method = RequestMethod.POST)
+    public ApiResponse createUserLexicon(HttpServletRequest request,
+            @RequestBody Map<String, Object> params) {
+        try {
+            Integer userId = (Integer) request.getAttribute("CURRENT_USER_ID");
+            String name = (String)params.get("name");
+            lexiconsService.createUserLexicon(userId,name);
+            return ApiResponse.fail(ApiResponseStatus.DEVELOPING);
+        } catch (Exception e) {
+            return ApiResponse.fail(e.getMessage());
+        }
+    }
+
 }

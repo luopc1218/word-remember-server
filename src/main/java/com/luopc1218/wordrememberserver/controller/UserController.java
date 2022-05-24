@@ -1,18 +1,13 @@
 package com.luopc1218.wordrememberserver.controller;
 
 import com.luopc1218.wordrememberserver.entity.request.ApiResponse;
-import com.luopc1218.wordrememberserver.entity.user.Password;
 import com.luopc1218.wordrememberserver.entity.user.User;
 import com.luopc1218.wordrememberserver.service.UserService;
 import com.luopc1218.wordrememberserver.util.annotation.JsonWebTokenRequire;
-import com.luopc1218.wordrememberserver.util.jwt.Jwt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
-import java.util.Objects;
-
 
 @RestController
 @RequestMapping("/user")
@@ -24,11 +19,7 @@ public class UserController {
     @JsonWebTokenRequire
     @RequestMapping(value = "/checkSignIn", method = RequestMethod.GET)
     public ApiResponse checkSignIn(@RequestHeader("Authorization") String accessToken) {
-        try {
-            return ApiResponse.success(true);
-        } catch (Exception e) {
-            return ApiResponse.fail(e.getMessage());
-        }
+        return ApiResponse.success(true);
     }
 
     @JsonWebTokenRequire
@@ -36,34 +27,18 @@ public class UserController {
     public ApiResponse getUserInfo(HttpServletRequest request, @RequestHeader("Authorization") String accessToken) {
         try {
             Integer userId = (Integer) request.getAttribute("CURRENT_USER_ID");
-            User user = userService.getUserById(userId);
-            if (user != null) {
-                return ApiResponse.success(user);
-            } else {
-                return ApiResponse.fail("用户不存在");
-            }
+            User user = userService.getUserInfo(userId);
+            return ApiResponse.success(user);
         } catch (Exception e) {
             return ApiResponse.fail(e.getMessage());
         }
     }
 
-
     @RequestMapping(value = "/signIn", method = RequestMethod.POST)
     public ApiResponse signIn(@RequestBody Map<String, String> signInForm) {
         try {
-            User user = userService.getUserByName(signInForm.get("name"));
-            if (user != null) {
-                String encryptedPassword = new Password(signInForm.get("password")).getEncryptedPassword();
-                Integer userId = user.getId();
-                String basePassword = userService.getPasswordById(userId);
-                if (!Objects.equals(basePassword, encryptedPassword)) {
-                    return ApiResponse.fail("密码错误");
-                }
-                String jwtToken = Jwt.createJwtToken(user);
-                return ApiResponse.success(jwtToken, "登陆成功");
-            } else {
-                return ApiResponse.fail("用户不存在");
-            }
+            String token = userService.signIn(signInForm);
+            return ApiResponse.success(token, "登录成功");
         } catch (Exception e) {
             return ApiResponse.fail(e.getMessage());
         }
@@ -71,17 +46,8 @@ public class UserController {
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public ApiResponse signUp(@RequestBody Map<String, String> signUpForm) {
-        String name = signUpForm.get("name");
-        String password = signUpForm.get("password");
-        String phone = signUpForm.get("phone");
-        String email = signUpForm.get("email");
-        String avatarUrl = signUpForm.get("avatarUrl");
         try {
-            if (userService.getUserByName(name) != null) {
-                return ApiResponse.fail("用户已存在");
-            }
-            String encryptedPassword = new Password(password).getEncryptedPassword();
-            userService.addUser(new User(signUpForm.get("name"), phone, email, avatarUrl), encryptedPassword);
+            userService.signUp(signUpForm);
             return ApiResponse.success("注册成功");
         } catch (Exception e) {
             return ApiResponse.fail(e.getMessage());
@@ -106,13 +72,7 @@ public class UserController {
     public ApiResponse changePassword(HttpServletRequest request, @RequestBody Map<String, Object> changePasswordForm) {
         try {
             Integer userId = (Integer) request.getAttribute("CURRENT_USER_ID");
-            String encryptedPassword = new Password((String) changePasswordForm.get("password")).getEncryptedPassword();
-            String basePassword = userService.getPasswordById(userId);
-            if (!Objects.equals(basePassword, encryptedPassword)) {
-                return ApiResponse.fail("密码错误");
-            }
-            String encryptedNewPassword = new Password((String) changePasswordForm.get("newPassword")).getEncryptedPassword();
-            userService.changePassword(userId, encryptedNewPassword);
+            userService.changePassword(userId, changePasswordForm);
             return ApiResponse.success("修改成功");
         } catch (Exception e) {
             return ApiResponse.fail(e.getMessage());

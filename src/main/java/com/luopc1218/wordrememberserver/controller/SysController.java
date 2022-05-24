@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 public class SysController {
 
@@ -17,7 +15,10 @@ public class SysController {
 
     @RequestMapping(value = "/getSysConfig", method = RequestMethod.GET)
     public ApiResponse getSysConfig() {
-        Map<String, Object> sysConfig = sysService.getSysConfig();
-        return ApiResponse.success(sysConfig);
+        try {
+            return ApiResponse.success(sysService.getSysConfig());
+        } catch (Exception e) {
+            return ApiResponse.fail(e.getMessage());
+        }
     }
 }

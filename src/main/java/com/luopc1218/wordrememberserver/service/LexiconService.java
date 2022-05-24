@@ -18,4 +18,8 @@ public class LexiconService {
                 lexiconMapper.getUserLexiconsCount(userId));
     }
 
+    public void createUserLexicon(Integer userId, String name) {
+        lexiconMapper.createUserLexicon(userId, name);
+    }
+
 }

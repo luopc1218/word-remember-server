@@ -3,6 +3,8 @@ package com.luopc1218.wordrememberserver.repository;
 import java.util.List;
 import com.luopc1218.wordrememberserver.entity.lexicon.Lexicon;
 import com.luopc1218.wordrememberserver.entity.request.Pagination;
+
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -15,4 +17,7 @@ public interface LexiconMapper {
 
     @Select("select count(*) as count from lexicon where onwerId=#{userId};")
     Integer getUserLexiconsCount(Integer userId);
+
+    @Insert("")
+    void createUserLexicon(Integer userId, String name);
 }
