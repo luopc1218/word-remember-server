@@ -1,8 +1,8 @@
 package com.luopc1218.wordrememberserver.controller;
 
-import com.luopc1218.wordrememberserver.entity.ApiResponse.ApiResponse;
-import com.luopc1218.wordrememberserver.entity.Password;
-import com.luopc1218.wordrememberserver.entity.User;
+import com.luopc1218.wordrememberserver.entity.request.ApiResponse;
+import com.luopc1218.wordrememberserver.entity.user.Password;
+import com.luopc1218.wordrememberserver.entity.user.User;
 import com.luopc1218.wordrememberserver.service.UserService;
 import com.luopc1218.wordrememberserver.util.annotation.JsonWebTokenRequire;
 import com.luopc1218.wordrememberserver.util.jwt.Jwt;

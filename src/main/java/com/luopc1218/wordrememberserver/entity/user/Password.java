@@ -1,4 +1,4 @@
-package com.luopc1218.wordrememberserver.entity;
+package com.luopc1218.wordrememberserver.entity.user;
 import lombok.Data;
 import org.springframework.util.DigestUtils;
 

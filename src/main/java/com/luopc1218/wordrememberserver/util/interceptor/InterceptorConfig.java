@@ -1,6 +1,5 @@
 package com.luopc1218.wordrememberserver.util.interceptor;
 
-import com.luopc1218.wordrememberserver.util.interceptor.RequestInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

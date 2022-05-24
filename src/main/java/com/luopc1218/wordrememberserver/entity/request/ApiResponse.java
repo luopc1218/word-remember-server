@@ -1,4 +1,4 @@
-package com.luopc1218.wordrememberserver.entity.ApiResponse;
+package com.luopc1218.wordrememberserver.entity.request;
 
 import lombok.Data;
 

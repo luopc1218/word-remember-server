@@ -1,6 +1,6 @@
 package com.luopc1218.wordrememberserver.controller;
 
-import com.luopc1218.wordrememberserver.entity.ApiResponse.ApiResponse;
+import com.luopc1218.wordrememberserver.entity.request.ApiResponse;
 import com.luopc1218.wordrememberserver.service.SysService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

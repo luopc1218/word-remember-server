@@ -2,8 +2,8 @@ package com.luopc1218.wordrememberserver.util.interceptor;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.luopc1218.wordrememberserver.entity.ApiResponse.ApiResponse;
-import com.luopc1218.wordrememberserver.entity.ApiResponse.ApiResponseStatus;
+import com.luopc1218.wordrememberserver.entity.request.ApiResponse;
+import com.luopc1218.wordrememberserver.entity.request.ApiResponseStatus;
 import com.luopc1218.wordrememberserver.util.annotation.JsonWebTokenRequire;
 import com.luopc1218.wordrememberserver.util.jwt.Jwt;
 import jakarta.servlet.ServletOutputStream;

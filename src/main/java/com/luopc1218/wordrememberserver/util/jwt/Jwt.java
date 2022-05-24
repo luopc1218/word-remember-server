@@ -4,9 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.luopc1218.wordrememberserver.entity.User;
-
-import java.time.LocalDateTime;
+import com.luopc1218.wordrememberserver.entity.user.User;
 import java.util.Date;
 
 public class Jwt {
@@ -23,7 +21,7 @@ public class Jwt {
     public static Boolean checkJwtToken(String jwtToken) {
         try {
             JWTVerifier jwtVerifier = JWT.require(Jwt.algorithm).build();
-            DecodedJWT decodedJWT = jwtVerifier.verify(jwtToken.split(" ")[1]);
+            jwtVerifier.verify(jwtToken.split(" ")[1]);
             return true;
         } catch (Exception e) {
             return false;
