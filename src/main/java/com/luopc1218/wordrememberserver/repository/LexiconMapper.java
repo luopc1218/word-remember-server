@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface LexiconMapper {
 
-    @Select("select id,name,onwerId from lexicon where onwerId=#{userId} limit #{pagination.limit},#{pagination.pageSize};")
+    @Select("select id,name,onwerId,cover,description from lexicon where onwerId=#{userId} limit #{pagination.limit},#{pagination.pageSize};")
     List<Lexicon> getUserLexicons(Integer userId, @Param("pagination") Pagination pagination);
 
     @Select("select count(*) as count from lexicon where onwerId=#{userId};")
