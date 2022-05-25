@@ -13,9 +13,9 @@ public class LexiconService {
     @Autowired
     LexiconMapper lexiconMapper;
 
-    public PaginationData<Lexicon> getUserLexicons(Integer userId, Pagination pagination) {
-        return new PaginationData<Lexicon>(lexiconMapper.getUserLexicons(userId, pagination),
-                lexiconMapper.getUserLexiconsCount(userId));
+    public PaginationData<Lexicon> getLexiconList(Integer userId, Pagination pagination) {
+        return new PaginationData<>(lexiconMapper.getLexiconList(userId, pagination),
+                lexiconMapper.getLexiconListCount(userId));
     }
 
     public void createUserLexicon(Integer userId, String name) {

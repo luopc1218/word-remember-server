@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.luopc1218.wordrememberserver.entity.user.User;
+
 import java.util.Date;
 
 public class Jwt {
@@ -31,5 +32,13 @@ public class Jwt {
     public static DecodedJWT getJwtToken(String jwtToken) {
         JWTVerifier jwtVerifier = JWT.require(Jwt.algorithm).build();
         return jwtVerifier.verify(jwtToken.split(" ")[1]);
+    }
+
+    public static Integer getUserId(String jwtToken) {
+        if (Jwt.checkJwtToken(jwtToken)) {
+            DecodedJWT decodedJWT = Jwt.getJwtToken(jwtToken);
+            return decodedJWT.getClaim("userId").asInt();
+        }
+        return null;
     }
 }
